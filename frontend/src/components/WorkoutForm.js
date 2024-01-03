@@ -25,7 +25,7 @@ const WorkoutForm = () => {
 
     if (!response.ok) {
       setError(json.msg);
-      setEmptyFields(json.msg);
+      setEmptyFields(json.emptyFields);
     }
     if (response.ok) {
       setTitle('');
@@ -53,12 +53,14 @@ const WorkoutForm = () => {
         type="number"
         onChange={(e) => setReps(e.target.value)}
         value={reps}
+        className={emptyFields.includes('reps') ? 'error' : ''}
       />
       <label>Load (in kg): </label>
       <input
         type="number"
         onChange={(e) => setLoad(e.target.value)}
         value={load}
+        className={emptyFields.includes('load') ? 'error' : ''}
       />
       <button type="submit">Add Workout</button>
       {error && <div className="error">{error}</div>}
