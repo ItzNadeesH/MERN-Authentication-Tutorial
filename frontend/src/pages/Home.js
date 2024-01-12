@@ -5,10 +5,13 @@ import { useAuthContext } from '../hooks/useAuthContext';
 // Components
 import WorkoutDetails from '../components/WorkoutDetails';
 import WorkoutForm from '../components/WorkoutForm';
+import { useLogout } from '../hooks/useLogout';
 
 const Home = () => {
   const { workouts, dispatch } = useWorkoutContext();
   const { user } = useAuthContext();
+  const { logout } = useLogout();
+
   useEffect(() => {
     const fetchWorkouts = async () => {
       const response = await fetch('/api/workouts', {
@@ -17,6 +20,9 @@ const Home = () => {
         },
       });
       const json = await response.json();
+      if (json.msg === 'Request is not authorized') {
+        logout();
+      }
       if (response.ok) {
         dispatch({ type: 'SET_WORKOUTS', payload: json });
       }
@@ -24,7 +30,7 @@ const Home = () => {
     if (user) {
       fetchWorkouts();
     }
-  }, [dispatch, user]);
+  }, [dispatch, logout, user]);
 
   return (
     <div className="home">
